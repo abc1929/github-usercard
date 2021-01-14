@@ -5,6 +5,8 @@
 */
 
 import axios from "axios";
+import { get, post } from "httpie";
+
 let responseForSelf;
 
 axios
@@ -78,6 +80,13 @@ function createCard(data) {
    const bio = document.createElement("p");
    bio.append(`Bio: ${data.bio}`);
 
+   let caldiv = document.createElement("div");
+   let cal = document.createElement("img");
+   cal.className = "calendar";
+   cal.src = `https://ghchart.rshah.org/${data.login}`;
+   cal.alt = `contributions for ${data.login}`;
+   caldiv.append(cal);
+
    // constructing hierarchy
    profile.append(link);
    cardinfo.append(
@@ -87,7 +96,8 @@ function createCard(data) {
       profile,
       followers,
       following,
-      bio
+      bio,
+      caldiv
    );
    card.append(img, cardinfo);
 
@@ -160,11 +170,20 @@ const instructors = [
    "bigknell",
 ];
 
-// This guarantees the cards gets rendered in the order of {instructors}, {me}, {my followers}
+// This function guarantees the cards gets rendered in the order of {instructors}, {me}, {my followers}
 // Each recursion we append a newly created card to the dom
 function sequentiallyAddAllCards(list) {
    if (list[0] === "0") {
       // true end of process
+      // adds contributions before exiting
+      document.querySelectorAll(".calendar").forEach((i) => {
+         i.style.width = "130%";
+         i.style["margin-left"] = "-175px";
+         i.style["margin-top"] = "30px";
+         // i.style.height = "95%";
+         // console.log(i);
+      });
+
       return;
    }
    if (list.length === 0) {
